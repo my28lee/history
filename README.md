@@ -9,3 +9,6 @@ virtualenv --system-site-packages
 pip install -r requirements/dev.txt
 
 python manage.py run
+
+#db file creation
+sqlite3 database.db < schema.sql
