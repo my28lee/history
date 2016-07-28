@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Memo List{% endblock %}
+
+{% block body %}
+    <table width="100%" height="100%" style="border-style: solid;border-color: #11557C">
+        <tr>
+            <th colspan="3" style="background-color: #11557C"><h3 style="color: white;font-weight:bold ">{{ svnurl }}<br>svn history</h3></th>
+        </tr>
+        {% for item in data %}
+        <tr>
+            <td width="150">리비전 : {{ item.rev }}</td>
+            <td width="150">ID : {{ item.author }}</td>
+            <td>시간 : {{ item.time }}</td>
+        </tr>
+        <tr>
+            <td colspan="3">{{ item.message }}</td>
+        </tr>
+        {% for files in item.path %}
+            <tr>
+                <td colspan="3">{{ files.action }}&nbsp;{{ files.path }}<br>{{ files.diff | linebreaks }}</td>
+            </tr>
+        {% endfor %}
+        {% endfor %}
+    </table>
+{% endblock %}

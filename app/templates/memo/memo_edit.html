@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Memo Edit{% endblock %}
+{% block body %}
+    <div>
+        <input type="button" value="Save"/>
+        <a href="{{ url_for('.index') }}"><input type="button" value="List"/></a>
+    </div>
+    <table height="100%" style="border-style: solid;border-color: #11557C">
+        <tr>
+            <td style="width:100px;">메모</td>
+            <td style="width:400px;"><textarea type="text" cols="100" rows="10"></textarea></td>
+        </tr>
+        <tr>
+            <td style="width:100px;">날짜</td>
+            <td style="width:400px;"><input type="text" style="width: 300px"/></td>
+        </tr>
+        <tr>
+            <td style="width:100px;">태그</td>
+            <td style="width:400px;"><input type="text" style="width: 300px"/></td>
+        </tr>
+    </table>
+{% endblock %}

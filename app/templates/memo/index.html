@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Memo List{% endblock %}
+
+{% block body %}
+    <div>
+        <a href="{{ url_for('.memo_edit') }}"><input type="button" value="Add"/></a>
+        <input type="button" value="Delete"/>
+    </div>
+    <table width="800" height="100%" style="border-style: solid;border-color: #11557C">
+        <tr>
+            <th>메모</th>
+            <th width="150">날짜</th>
+            <th width="150">태그</th>
+        </tr>
+    </table>
+{% endblock %}
