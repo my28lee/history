@@ -65,9 +65,9 @@ class svncheck():
         #print pathinfo.copyfrom_revision
         if(past_rev != None):
             diff_text = self.client.diff('.',self.root+path,
-                revision1=pysvn.Revision(pysvn.opt_revision_kind.number,rev),
+                revision1=pysvn.Revision(pysvn.opt_revision_kind.number,past_rev),
                 url_or_path2=self.root+path,
-                revision2=pysvn.Revision(pysvn.opt_revision_kind.number,past_rev),
+                revision2=pysvn.Revision(pysvn.opt_revision_kind.number,rev),
                 recurse=True,
                 ignore_ancestry=False)
             return diff_text
