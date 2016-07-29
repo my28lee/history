@@ -1,10 +1,7 @@
 * {
     font-family: "sans-serif";
 }
-table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-}
+
 .hll { background-color: #ffffcc }
 .c { color: #408080; font-style: italic } /* Comment */
 .err { border: 1px solid #FF0000 } /* Error */

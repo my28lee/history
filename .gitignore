@@ -4,3 +4,5 @@ svn-*
 local_*
 study.txt
 *.pyc
+local_history.ini
+database.db
