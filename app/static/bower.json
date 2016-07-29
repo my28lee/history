@@ -1,0 +1,21 @@
+{
+  "name": "static",
+  "homepage": "https://github.com/my28lee/history",
+  "authors": [
+    "dalcong2life <dalcong2life@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "libs/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7"
+  }
+}
