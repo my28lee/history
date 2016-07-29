@@ -1,6 +1,6 @@
 .idea/
 venv/
 svn-*
-svn.properties
+local_*
 study.txt
 *.pyc

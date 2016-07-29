@@ -17,7 +17,7 @@ manager = Manager(app)
 
 @manager.command
 def run():
-    app.run(host='0.0.0.0')
+    app.run(host='11.4.9.233',port=80)
 
 if __name__ == "__main__":
     manager.run()
