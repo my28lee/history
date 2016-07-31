@@ -2,6 +2,13 @@
     font-family: "sans-serif";
 }
 
+pre {
+    display: block;
+    font-family: sans-serif !important;
+    white-space: pre;
+    margin: 1em 0px 1em;
+}
+
 .hll { background-color: #ffffcc }
 .c { color: #408080; font-style: italic } /* Comment */
 .err { border: 1px solid #FF0000 } /* Error */

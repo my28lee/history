@@ -11,9 +11,10 @@
     <script src="{{ url_for('static',filename='js/memo.js') }}"></script>
 </head>
 <body>
+{#<div class="container-fluid">#}
 <div class="container">
-    
-    <h1>{% block head %}{% endblock %}</h1>
+
+    <h2>{% block head %}{% endblock %}</h2>
     {% block body %}{% endblock %}
 </div>
 </body>

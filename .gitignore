@@ -6,3 +6,4 @@ study.txt
 *.pyc
 local_history.ini
 database.db
+app/static/libs/

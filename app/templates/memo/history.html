@@ -4,55 +4,80 @@
 {% block head %}SVN History List{% endblock %}
 
 {% block body %}
-    <div class="row">
-        <div class="col-md-12">
-            sldfjsjdlf
-        </div>
+
+    <div class="pull-right" style="padding-bottom: 5px;">
+
+        <a class="btn btn-sm btn-danger" href="{{ url_for('.svn_path_select') }}">
+            <span class="glyphicon glyphicon-list"> SVN List</span>
+        </a>
     </div>
 
     <div class="row">
-        <div class="col-md-2">
-            sdf
-        </div>
-        <div class="col-md-2">
-            sdf
-        </div>
-        <div class="col-md-8">
-            sdf
-        </div>
-    </div>
-     <div class="row">
         <div class="col-md-12">
-            fsdfsf
+            <div class="alert alert-info" role="alert"><b>{{ svnurl }}</b></div>
         </div>
     </div>
 
-    <table class="table table-bordered">
-        <tr>
-            <th colspan="3" style="background-color: #11557C">
-                <h3 style="color: white;font-weight:bold ">
-                    {{ svnurl }}<br>
-                    <a href="{{ url_for('.svn_path_select') }}">svn
-                        list</a>
-                </h3>
-            </th>
-        </tr>
+    {% for item in data %}
+        <div class="row">
+            <div class="col-md-12" style="padding-bottom: 5px;">
+                <span class="label label-danger">리비전 : {{ item[2] }}</span>
+                <span class="label label-primary">ID : {{ item[3] }}</span>
+                <span class="label label-success">시간 : {{ item[4] }}</span>
+            </div>
+        </div>
 
-        {% for item in data %}
-            <tr>
-                <td width="150" style="background-color: #bbbbbb">리비전 : {{ item[2] }}</td>
-                <td width="150" style="background-color: #bbbbbb">ID : {{ item[3] }}</td>
-                <td style="background-color: #bbbbbb">시간 : {{ item[4] }}</td>
-            </tr>
-            <tr>
-                <td colspan="3" style="background-color: #bbbbbb">{{ item[5]|nl2br }}</td>
-            </tr>
-            {% for files in item[6] %}
-                <tr>
-                    <td colspan="3">{{ files.action }}&nbsp;{{ files.path }}<br>{{ files.diff|safe }}</td>
-                </tr>
-            {% endfor %}
-        {% endfor %}
+        <div class="panel panel-info">
+            <!-- Default panel contents -->
+            <div class="panel-heading">{{ item[5]|nl2br }}</div>
 
-    </table>
+            <div class="panel-body">
+                {% for files in item[6] %}
+                    {% if loop.first %}
+
+                        <p class="text-warning">
+                            {% if files.action == 'I' %}
+                                <span class="label label-primary">
+                            {% elif files.action == 'M' %}
+                                <span class="label label-info">
+                            {% elif files.action == 'D' %}
+                                <span class="label label-danger">
+                            {% endif %}
+                            {{ files.action }}
+                            </span>
+                            &nbsp;
+                            {% set last_slash = files.path.rindex('/') %}
+                            {{ (files.path[:last_slash + 1] + '<b>' + files.path[last_slash + 1:] + '</b>') | safe }}
+                        </p>
+                    {% endif %}
+                    <p>
+                        {{ files.diff|safe }}
+                    </p>
+                {% endfor %}
+
+            </div>
+        </div>
+    {% endfor %}
+
+    {#    <div class="row">#}
+    {#        <div class="col-md-12">#}
+    {#            <table class="table">#}
+    {#                {% for item in data %}#}
+    {#                    <tr>#}
+    {#                        <td width="150" style="background-color: #bbbbbb">리비전 : {{ item[2] }}</td>#}
+    {#                        <td width="150" style="background-color: #bbbbbb">ID : {{ item[3] }}</td>#}
+    {#                        <td style="background-color: #bbbbbb">시간 : {{ item[4] }}</td>#}
+    {#                    </tr>#}
+    {#                    <tr>#}
+    {#                        <td colspan="3" style="background-color: #bbbbbb">{{ item[5]|nl2br }}</td>#}
+    {#                    </tr>#}
+    {#                    {% for files in item[6] %}#}
+    {#                        <tr>#}
+    {#                            <td colspan="3">{{ files.action }}&nbsp;{{ files.path }}<br>{{ files.diff|safe }}</td>#}
+    {#                        </tr>#}
+    {#                    {% endfor %}#}
+    {#                {% endfor %}#}
+    {#            </table>#}
+    {#        </div>#}
+    {#    </div>#}
 {% endblock %}
