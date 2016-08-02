@@ -23,7 +23,6 @@ def create_app():
 
     return app
 
-
 @app.template_filter()
 @evalcontextfilter
 def nl2br(eval_ctx, value):

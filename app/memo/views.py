@@ -43,6 +43,7 @@ def svn_path_select():
 def svn_history():
     import ConfigParser
     config = ConfigParser.ConfigParser();
+    #SVN 설정 정보 로딩
     config.read('local_history.ini')
 
     path_info = g.db.execute('select * from svn_info where s_path_id=?',[request.args.get('id')]).fetchall()
@@ -50,11 +51,13 @@ def svn_history():
     print request.args.get('id'),path_info[0][1],path_info[0][2],path_info[0][3]
     s = svncheck(config.get('svn','rooturl'),path_info[0][1],'','',config.get('svn','uid'),config.get('svn','upass'))
 
+    #마지막 리비전 조회
     last_revision = s.getLastRevision();
 
     resultlist = []
 
     print 'last_revision',path_info[0][3],last_revision
+    #DB에 저장된 최종 리비전이 리파지토리 최종 리비전 보다 작을 경우 변경 로그 조회
     if int(path_info[0][3]) < last_revision:
         cur = g.db.cursor()
         cur.execute('update svn_info set s_last_revision=? where s_path_url=?',[last_revision,path_info[0][1]])
@@ -67,18 +70,15 @@ def svn_history():
             print 'cur.lastrowid => '+str(id),info.revision.number
             pathlist = []
             for pathinfo in info.changed_paths:
-                #filedata = dict()
-                #filedata['path'] = pathinfo.path
-                #filedata['action'] = pathinfo.action
                 difftext = None
+                #파일이 수정된 경우에만 diff 실행
                 if pathinfo.action == 'M':
+                    #인코딩 에러가 발생할 경우 빈값으로 셋팅
                     try:
                         difftext = s.getDiffText(info.revision.number,pathinfo.path).decode('utf-8')
                     except:
                         difftext = ''
-#                    if difftext != None:
-#                        filedata['diff'] = difftext
-                #pathlist.append(filedata)
+
                 query = 'INSERT INTO svn_history_file (svn_id,file_action,file_path,file_diff) VALUES (?,?,?,?)'
                 cur.execute(query,[id,pathinfo.action,pathinfo.path,difftext])
 
@@ -96,29 +96,12 @@ def svn_history():
             filedata['path'] = subrow[3].replace(str(path_info[0][1]),'')
             filedata['action'] = subrow[2]
             if subrow[4]:
+                #diff 텍스트를 보기좋게 포장한다.
                 filedata['diff'] = highlight(subrow[4].decode("utf-8"),DiffLexer(),HtmlFormatter())
-                #print str(filedata['diff'])
             else: filedata['diff'] = ''
             pathlist.append(filedata)
         newlist = list(row)
         newlist.append(pathlist)
         resultlist.append(newlist)
-    #result = g.db.execute(query,[path_info[0][0]]).fetchall()
 
     return render_template('memo/history.html',data = resultlist,svnurl=svnurl)
-'''
-        for info in log:
-            pathlist = []
-            for pathinfo in info.changed_paths:
-                filedata = dict()
-                filedata['path'] = pathinfo.path
-                filedata['action'] = pathinfo.action
-
-                if pathinfo.action == 'M':
-                    difftext = s.getDiffText(info.revision.number,pathinfo.path)
-                    if difftext != None:
-                        filedata['diff'] = difftext
-                pathlist.append(filedata)
-
-            list.append({'rev':info.revision.number,'author':info.author,'time':time.ctime(info.date),'message':info.message,'path':pathlist})
-'''
