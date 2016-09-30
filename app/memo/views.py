@@ -42,6 +42,13 @@ def svn_path_select():
     svn_list = g.db.execute('select * from svn_info order by product asc,s_path_url desc').fetchall()
     return render_template('memo/history_list.html',data = svn_list,rooturl=svnurl)
 
+@memo_blueprint.route('/history_add',methods = ['POST'])
+def svn_path_add():
+    query = 'INSERT INTO svn_info(product,s_path_url,s_start_revision,s_last_revision) values(?,?,?,?);'
+    g.db.execute(query,[request.form.get('product','mf2'),request.form.get('url',''),request.form.get('frev',''),request.form.get('frev','')])
+    g.db.commit()
+    return redirect(url_for('.svn_path_select'))
+
 @memo_blueprint.route('/history_del/<int:id>')
 def svn_path_delete(id):
     global ConfigParser
