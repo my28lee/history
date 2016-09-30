@@ -13,6 +13,9 @@
                         {{ rooturl }}{{ item[1] }}
                     </a>
                 </td>
+                 <td>
+                      <a href="{{ url_for('.svn_path_delete',id=item[0]) }}" class="btn btn-danger btn-sm" role="button">삭제</a>
+                  </td>
             </tr>
         {% endfor %}
     </table>

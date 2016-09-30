@@ -29,27 +29,58 @@ def streamed_response():
         yield '!'
     return Response(stream_with_context(generate()))
 
+ConfigParser = None
 
 @memo_blueprint.route('/history')
 def svn_path_select():
-    import ConfigParser
+    global ConfigParser
+    if ConfigParser is None:
+        import ConfigParser
     config = ConfigParser.ConfigParser();
     config.read('local_history.ini')
     svnurl = config.get('svn','rooturl')
-    svn_list = g.db.execute('select * from svn_info').fetchall()
+    svn_list = g.db.execute('select * from svn_info order by product asc,s_path_url desc').fetchall()
     return render_template('memo/history_list.html',data = svn_list,rooturl=svnurl)
+
+@memo_blueprint.route('/history_del/<int:id>')
+def svn_path_delete(id):
+    global ConfigParser
+    if ConfigParser is None:
+        import ConfigParser
+    config = ConfigParser.ConfigParser();
+    config.read('local_history.ini')
+    svnurl = config.get('svn','rooturl')
+    svn_list = g.db.execute('select * from svn_history where s_path_id='+str(id)).fetchall()
+    for row in svn_list:
+        g.db.execute('delete from svn_history_file where id='+str(row[0]))
+
+    g.db.execute('delete from svn_history where s_path_id='+str(id))
+    g.db.execute('delete from svn_info where s_path_id='+str(id))
+    g.db.commit()
+    return redirect(url_for('.svn_path_select'))
+
 
 @memo_blueprint.route('/history/info')
 def svn_history():
-    import ConfigParser
+    global ConfigParser
+    if ConfigParser is None:
+        import ConfigParser
     config = ConfigParser.ConfigParser();
     #SVN 설정 정보 로딩
     config.read('local_history.ini')
 
     path_info = g.db.execute('select * from svn_info where s_path_id=?',[request.args.get('id')]).fetchall()
-    svnurl = config.get('svn','rooturl')+path_info[0][1]
+
+    svnrooturl = ''
+    if path_info[0][4] == 'mf2':
+        svnrooturl = config.get('svn','rooturl')
+        svnurl = svnrooturl+path_info[0][1]
+    else:
+        svnrooturl = config.get('svn','rootmfiurl')
+        svnurl = svnrooturl+path_info[0][1]
+
     print request.args.get('id'),path_info[0][1],path_info[0][2],path_info[0][3]
-    s = svncheck(config.get('svn','rooturl'),path_info[0][1],'','',config.get('svn','uid'),config.get('svn','upass'))
+    s = svncheck(svnrooturl,path_info[0][1],'','',config.get('svn','uid'),config.get('svn','upass'))
 
     #마지막 리비전 조회
     last_revision = s.getLastRevision();
@@ -65,7 +96,7 @@ def svn_history():
 
         for info in log:
             query = 'INSERT INTO svn_history (s_path_id,s_revision,s_id,s_time,s_comment) VALUES (?,?,?,?,?)'
-            cur.execute(query,[path_info[0][0],info.revision.number,info.author,time.ctime(info.date),info.message.decode('utf8')])
+            cur.execute(query,[path_info[0][0],info.revision.number,info.author,time.ctime(info.date),info.message.          decode('utf8')])
             id = cur.lastrowid
             print 'cur.lastrowid => '+str(id),info.revision.number
             pathlist = []
@@ -80,7 +111,8 @@ def svn_history():
                         difftext = ''
 
                 query = 'INSERT INTO svn_history_file (svn_id,file_action,file_path,file_diff) VALUES (?,?,?,?)'
-                cur.execute(query,[id,pathinfo.action,pathinfo.path,difftext])
+                tmpPath = pathinfo.path.decode('utf-8')
+                cur.execute(query,[id,pathinfo.action,tmpPath,difftext])
 
         g.db.commit()
         cur.close()
