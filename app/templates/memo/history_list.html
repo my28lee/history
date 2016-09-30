@@ -8,9 +8,10 @@
         {% for item in data %}
             <tr>
                 <td width="50">{{ loop.index }}</td>
+                <td width="50">{{ item[4] }}</td>
                 <td>
                     <a href="{{ url_for('.svn_history',id=item[0]) }}">
-                        {{ rooturl }}{{ item[1] }}
+                        {{ item[1] }}
                     </a>
                 </td>
                  <td>
