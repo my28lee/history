@@ -127,8 +127,8 @@ def svn_history():
         cur.close()
 
     if pSvnId:
-        query = 'select * from svn_history where s_path_id=? and s_id=? order by s_revision desc limit 10'
-        cur = g.db.execute(query,[path_info[0][0],pSvnId])
+        query = 'select * from svn_history where s_path_id=? and s_id LIKE ? order by s_revision desc limit 10'
+        cur = g.db.execute(query,[path_info[0][0],'%'+pSvnId+'%'])
     else:
         query = 'select * from svn_history where s_path_id=? order by s_revision desc limit 10'
         cur = g.db.execute(query,[path_info[0][0]])
