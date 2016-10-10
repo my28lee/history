@@ -81,7 +81,7 @@ def svn_history():
     path_info = g.db.execute('select * from svn_info where s_path_id=?',[pSID]).fetchall()
 
     svnrooturl = ''
-    if path_info[0][4] == 'mf2':
+    if path_info[0][4] == 'mf2' or path_info[0][4] == 'ae':
         svnrooturl = config.get('svn','rooturl')
         svnurl = svnrooturl+path_info[0][1]
     else:
