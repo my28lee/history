@@ -5,8 +5,23 @@
 
 {% block body %}
 
+    <div class="pull-left" style="padding-bottom: 5px;">
+        <form id="svnform" method="GET" action="{{ url_for('.svn_history') }}" class="form-inline">
+            <div class="form-group">
+                <label for="frev">SVN ID:</label>
+                <input type="text" class="form-control" name="svnid" placeholder="ID" value="{{ svnid if svnid != None }}">
+                <input type="hidden" name="id" value="{{ sid }}">
+            </div>
+            <button type="submit" class="btn btn-default">Search</button>
+            <a class="btn btn-sm btn-link" onclick="javascript:document.forms[0].elements['svnid'].value='khjini3'">
+                khjini3(김현진)
+            </a>
+            <a class="btn btn-sm btn-link" onclick="javascript:document.forms[0].elements['svnid'].value='kim13'">
+                kim13(김대환)
+            </a>
+        </form>
+    </div>
     <div class="pull-right" style="padding-bottom: 5px;">
-
         <a class="btn btn-sm btn-danger" href="{{ url_for('.svn_path_select') }}">
             <span class="glyphicon glyphicon-list"> SVN List</span>
         </a>
@@ -57,26 +72,4 @@
             </div>
         </div>
     {% endfor %}
-
-    {#    <div class="row">#}
-    {#        <div class="col-md-12">#}
-    {#            <table class="table">#}
-    {#                {% for item in data %}#}
-    {#                    <tr>#}
-    {#                        <td width="150" style="background-color: #bbbbbb">리비전 : {{ item[2] }}</td>#}
-    {#                        <td width="150" style="background-color: #bbbbbb">ID : {{ item[3] }}</td>#}
-    {#                        <td style="background-color: #bbbbbb">시간 : {{ item[4] }}</td>#}
-    {#                    </tr>#}
-    {#                    <tr>#}
-    {#                        <td colspan="3" style="background-color: #bbbbbb">{{ item[5]|nl2br }}</td>#}
-    {#                    </tr>#}
-    {#                    {% for files in item[6] %}#}
-    {#                        <tr>#}
-    {#                            <td colspan="3">{{ files.action }}&nbsp;{{ files.path }}<br>{{ files.diff|safe }}</td>#}
-    {#                        </tr>#}
-    {#                    {% endfor %}#}
-    {#                {% endfor %}#}
-    {#            </table>#}
-    {#        </div>#}
-    {#    </div>#}
 {% endblock %}

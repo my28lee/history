@@ -67,7 +67,7 @@ def svn_path_delete(id):
     return redirect(url_for('.svn_path_select'))
 
 
-@memo_blueprint.route('/history/info')
+@memo_blueprint.route('/history/info',methods=['GET','POST'])
 def svn_history():
     global ConfigParser
     if ConfigParser is None:
@@ -75,8 +75,10 @@ def svn_history():
     config = ConfigParser.ConfigParser();
     #SVN 설정 정보 로딩
     config.read('local_history.ini')
+    pSvnId = request.args.get('svnid')
+    pSID = request.args.get('id')
 
-    path_info = g.db.execute('select * from svn_info where s_path_id=?',[request.args.get('id')]).fetchall()
+    path_info = g.db.execute('select * from svn_info where s_path_id=?',[pSID]).fetchall()
 
     svnrooturl = ''
     if path_info[0][4] == 'mf2':
@@ -90,7 +92,7 @@ def svn_history():
     s = svncheck(svnrooturl,path_info[0][1],'','',config.get('svn','uid'),config.get('svn','upass'))
 
     #마지막 리비전 조회
-    last_revision = s.getLastRevision();
+    last_revision = s.getLastRevision()
 
     resultlist = []
 
@@ -124,8 +126,13 @@ def svn_history():
         g.db.commit()
         cur.close()
 
-    query = 'select * from svn_history where s_path_id=? order by s_revision desc limit 10'
-    cur = g.db.execute(query,[path_info[0][0]])
+    if pSvnId:
+        query = 'select * from svn_history where s_path_id=? and s_id=? order by s_revision desc limit 10'
+        cur = g.db.execute(query,[path_info[0][0],pSvnId])
+    else:
+        query = 'select * from svn_history where s_path_id=? order by s_revision desc limit 10'
+        cur = g.db.execute(query,[path_info[0][0]])
+
     for row in cur.fetchall():
         subquery = 'select * from svn_history_file where svn_id=?'
         pathlist = []
@@ -143,4 +150,4 @@ def svn_history():
         newlist.append(pathlist)
         resultlist.append(newlist)
 
-    return render_template('memo/history.html',data = resultlist,svnurl=svnurl)
+    return render_template('memo/history.html',data = resultlist,svnurl=svnurl,svnid=pSvnId,sid=pSID)
