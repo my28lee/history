@@ -112,13 +112,23 @@ def svn_history():
             pathlist = []
             for pathinfo in info.changed_paths:
                 difftext = None
-                #파일이 수정된 경우에만 diff 실행
+                #파일 수정
                 if pathinfo.action == 'M':
                     #인코딩 에러가 발생할 경우 빈값으로 셋팅
                     try:
                         difftext = s.getDiffText(info.revision.number,pathinfo.path).decode('utf-8')
                     except:
                         difftext = ''
+                #파일 추가
+                elif pathinfo.action == 'A':
+                    #인코딩 에러가 발생할 경우 빈값으로 셋팅
+                    try:
+                        difftext = pathinfo.action+' '+s.getText(info.revision.number,pathinfo.path).decode('utf-8')
+                    except:
+                        difftext = ''
+                #파일 삭제
+                elif pathinfo.action == 'D':
+                    difftext = pathinfo.action+' '+pathinfo.path
 
                 query = 'INSERT INTO svn_history_file (svn_id,file_action,file_path,file_diff) VALUES (?,?,?,?)'
                 tmpPath = pathinfo.path.decode('utf-8')

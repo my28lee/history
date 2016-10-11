@@ -104,6 +104,14 @@ class svncheck():
                 ignore_ancestry=False)
             return diff_text
         return None
+    def getText(self,rev,path):
+        '''
+        변경된 파일의 변경 전/후 파일의 diff를 실행한다.
+        :param rev: 파일의 최종 리비전 번호
+        :param path: 파일 경로
+        :return: diff 텍스트
+        '''
+        return self.client.cat(self.root+path,revision=pysvn.Revision(pysvn.opt_revision_kind.number,rev))
 
 if __name__ == '__main__':
     import sys
