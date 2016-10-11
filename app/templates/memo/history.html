@@ -1,38 +1,35 @@
 {% extends "base.html" %}
 {% block title %}History 내역{% endblock %}
-
-{% block head %}SVN History List{% endblock %}
-
 {% block body %}
-
-    <div class="pull-left" style="padding-bottom: 5px;">
-        <form id="svnform" method="GET" action="{{ url_for('.svn_history') }}" class="form-inline">
-            <div class="form-group">
-                <label for="frev">SVN ID:</label>
-                <input type="text" class="form-control" name="svnid" placeholder="ID" value="{{ svnid if svnid != None }}">
-                <input type="hidden" name="id" value="{{ sid }}">
-            </div>
-            <button type="submit" class="btn btn-default">Search</button>
-            <a class="btn btn-sm btn-link" onclick="javascript:document.forms[0].elements['svnid'].value='khjini3'">
-                khjini3(김현진)
-            </a>
-            <a class="btn btn-sm btn-link" onclick="javascript:document.forms[0].elements['svnid'].value='kim13'">
-                kim13(김대환)
-            </a>
-        </form>
-    </div>
-    <div class="pull-right" style="padding-bottom: 5px;">
-        <a class="btn btn-sm btn-danger" href="{{ url_for('.svn_path_select') }}">
-            <span class="glyphicon glyphicon-list"> SVN List</span>
-        </a>
-    </div>
-
     <div class="row">
         <div class="col-md-12">
             <div class="alert alert-info" role="alert"><b>{{ svnurl }}</b></div>
         </div>
     </div>
-
+    <div class="col-md-12" style="padding-bottom: 20px">
+        <div class="pull-left">
+            <form id="svnform" method="GET" action="{{ url_for('.svn_history') }}" class="form-inline">
+                <div class="form-group">
+                    <label for="frev">USER ID:</label>
+                    <input type="text" class="form-control" name="svnid" placeholder="ID"
+                           value="{{ svnid if svnid != None }}">
+                    <input type="hidden" name="id" value="{{ sid }}">
+                </div>
+                <button type="submit" class="btn btn-default">Search</button>
+                <a class="btn btn-sm btn-link" onclick="javascript:document.forms[0].elements['svnid'].value='khjini3'">
+                    khjini3(김현진)
+                </a>
+                <a class="btn btn-sm btn-link" onclick="javascript:document.forms[0].elements['svnid'].value='kim13'">
+                    kim13(김대환)
+                </a>
+            </form>
+        </div>
+        <div class="pull-right">
+            <a class="btn btn-sm btn-danger" href="{{ url_for('.svn_path_select') }}">
+                <span class="glyphicon glyphicon-list"> SVN List</span>
+            </a>
+        </div>
+    </div>
     {% for item in data %}
         <div class="row">
             <div class="col-md-12" style="padding-bottom: 5px;">

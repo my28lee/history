@@ -39,7 +39,8 @@ def svn_path_select():
     config = ConfigParser.ConfigParser();
     config.read('local_history.ini')
     svnurl = config.get('svn','rooturl')
-    svn_list = g.db.execute('select * from svn_info order by product asc,s_path_url desc').fetchall()
+    svn_list = g.db.execute('select a.s_path_id,a.s_path_url,a.s_start_revision,a.s_last_revision,a.product,b.s_time,b.cnt from svn_info a LEFT JOIN (select s_path_id,max(s_revision),s_time, count(*) as cnt from svn_history group by s_path_id) b on a.s_path_id = b.s_path_id order by a.product asc,a.s_path_url desc').fetchall()
+
     return render_template('memo/history_list.html',data = svn_list,rooturl=svnurl)
 
 @memo_blueprint.route('/history_add',methods = ['POST'])
