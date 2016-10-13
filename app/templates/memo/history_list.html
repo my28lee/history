@@ -24,7 +24,7 @@
                 <td width="50">{{ loop.index }}</td>
                 <td width="50">{{ item[4]|upper }}</td>
                 <td>
-                    <a href="{{ url_for('.svn_history',id=item[0]) }}">
+                    <a href="{{ url_for('.svn_history',id=item[0],offset=0) }}">
                         {{ item[1] }}
                     </a>
                 </td>
