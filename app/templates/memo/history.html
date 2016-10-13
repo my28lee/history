@@ -3,7 +3,7 @@
 {% block body %}
     <div class="row">
         <div class="col-md-12">
-            <div class="alert alert-info" role="alert"><b>{{ svnurl }}</b></div>
+            <div class="alert alert-info" role="alert"><b>{{ param.svnurl }}</b></div>
         </div>
     </div>
     <form id="svnform" method="GET" action="{{ url_for('.svn_history') }}" class="form-inline">
