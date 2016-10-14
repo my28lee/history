@@ -44,6 +44,11 @@ def svn_path_select():
     config = ConfigParser.ConfigParser();
     config.read('local_history.ini')
     svnurl = config.get('svn', 'rooturl')
+
+    query = "INSERT INTO client_info (remote_ip,user_agent,connect_time) VALUES (?,?,datetime('now','localtime'))"
+    g.db.execute(query,[request.remote_addr,request.headers.get('User-Agent')])
+    g.db.commit()
+
     svn_list = g.db.execute(
         'select a.s_path_id,a.s_path_url,a.s_start_revision,a.s_last_revision,a.product,b.s_time,b.cnt from svn_info a LEFT JOIN (select s_path_id,max(s_revision),s_time, count(*) as cnt from svn_history group by s_path_id) b on a.s_path_id = b.s_path_id order by a.product asc,a.s_path_url desc').fetchall()
 
