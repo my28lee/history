@@ -11,7 +11,7 @@ from .. import app
 
 @app.before_request
 def before_request():
-    g.db = sqlite3.connect("database.db")
+    g.db = sqlite3.connect("database.db",check_same_thread=False)
 
 @app.teardown_appcontext
 def teardown_request(exception):
